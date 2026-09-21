@@ -44,7 +44,7 @@
 ダウンロード時: SHA-256 検証 + 著作権通知
 ([src/player/DriverManager.ts](../src/player/DriverManager.ts) の `notifyCopyright()`)。
 
-## 4. VSIX 同梱への切替検討 (Phase C 検討事項)
+## 4. VSIX 同梱への切替検討 (将来的なオプション)
 
 **Pros**:
 
@@ -61,7 +61,7 @@
 
 **推奨アクション**:
 
-1. Phase C 直前で切替 (`.vscodeignore` から `media/player/ZMUSIC208.X` を除外)
+1. 切替時に `.vscodeignore` から `media/player/ZMUSIC208.X` を除外
 2. `DriverManager.ensureDriver()` の優先順を「設定パス → 同梱 → キャッシュ → ダウンロード」に
 3. QuickPick は「デフォルト同梱を使う」がトップ選択肢に
 

@@ -153,7 +153,9 @@ export function getOpcodeSpec(
 
   if (opcode === 0xea) {
     // Roland exclusive: read forward until terminating $FF (inclusive).
-    // spec §2.5: '$EA の内側では終端判定をしないこと' → skip past the $EA header first.
+    // Inside $EA the byte stream may contain other $FF bytes that are NOT the
+    // terminator, so `.indexOf(0xff)` from the very top is unsafe — start scanning
+    // one byte after $EA and consume until the first following $FF.
     let i = offset + 1;
     while (i < bytes.length && bytes[i] !== 0xff) i++;
     if (i >= bytes.length) return UNKNOWN_SPEC; // truncated

@@ -35,7 +35,7 @@ SHARP X680x0 の Z-MUSIC v2.08 用 MML (`.zms`) を VS Code で編集・**その
 - **静的リント**: パラメータ範囲・括弧バランスに加えて、**FM 音色定義の 55/56 パラメータ数**を厳密検証 (Copilot 等が生成する Form 1/2 混合形の書式ミスを Problems パネルで即警告)
 - **コード補完**: `@` `(` `.` `[` トリガの CompletionItemProvider + 定型スニペット (`zmsinit`, `voice`, `malloc`, `assign`, `loop`, `chord`)
 - **F5 で発音**: エディタの現在内容 (未保存分含む) を SJIS+CRLF 化して WASM ドライバに投入、`m_play` で再生
-- **Shift+F5 でカーソル位置から再生**: 無音早送りで指定 step に到達してから発音 (仕様書 §2.20 Phase 4)
+- **Shift+F5 でカーソル位置から再生**: 無音早送りで指定 step に到達してから発音
 - **演奏位置トレース**: 各トラックの `p_data_pointer` を 30Hz で読み、対応する MML ソース範囲を色分けハイライト
 - **Player ビュー詳細表示**: 各トラック行に音色番号 `@n`・音量 `vNN`・現在演奏中の ZMS 行 `LNN` を live 表示
 - **Solo / Mute**: トラック行の S / M ボタンで単一トラックの独占再生・消音。ファイル単位で `workspaceState` に永続化 (次回開いても復元)
@@ -113,7 +113,7 @@ Z-MUSIC v2 は 30 年前の X68000 向け DSL で、汎用 LLM は音色定義 `
 
 - Z-MUSIC v3 (ZMSC3 構文) — z-music.js が v1.10 / v2.08 のみ対応のため。文法バージョン切替の骨組み (`zmusic.syntax.version`) は入っているが V3 ルールは未実装
 - 実機出力 (GIMIC / SCCI) / MIDI 出力 (Web MIDI は明示的に無効化)
-- AudioWorklet 化 (`ScriptProcessorNode` の将来的廃止対策) — Phase 4
+- AudioWorklet 化 (`ScriptProcessorNode` の将来的廃止対策)
 
 ## ライセンス
 

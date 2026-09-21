@@ -56,7 +56,7 @@ const V2_RULES: RuleSet = buildV2Rules();
 //
 // V3 独自の拡張 (`[TIMBRE n]`, `[VOLUME n]`, `[VIBRATO.*]` 等の
 // [KEYWORD arg] 系) は現状 regex ベースの ParamRule では扱いにくいので、
-// Phase 4 で拡張検討 (docs/V3_SUPPORT.md 参照)。
+// V3 固有パラメータの範囲チェックは未実装 (docs/V3_SUPPORT.md 参照)。
 //
 // 相違点として v3 では:
 //  - `[VOLUME n]` の n は 0-127 (絶対) — 単文字 V (0-16) と区別されるが

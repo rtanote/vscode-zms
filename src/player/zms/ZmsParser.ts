@@ -278,10 +278,10 @@ export function parseZms(doc: vscode.TextDocument): Map<number, SourceToken[]> {
       range: new vscode.Range(lineIndex, bodyStart + t.start, lineIndex, bodyStart + t.end),
     }));
 
-    // Share same token list across all tracks named on this MML line (spec §2.6.1
-    // rule 4 + §2.7 chord tracks) — SourceMap builder handles per-track ZMD
-    // matching independently, so appending the same objects to multiple tracks
-    // preserves ordering per track.
+    // `(t1,2,3)` のように複数トラックを 1 本の MML 行にまとめる書式では、
+    // 同じ SourceToken の配列を全対象トラックに共有 append する。SourceMap
+    // 側は per-track に ZMD と突き合わせるので、共有オブジェクトを詰めても
+    // トラックごとの順序性は保たれる。
     for (const trk of activeTracks) {
       const arr = perTrack.get(trk) ?? [];
       arr.push(...converted);

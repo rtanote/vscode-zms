@@ -5,7 +5,7 @@ out/
 .claude/
 .DS_Store
 
-# Phase 0 スパイクの一時ファイル (fixtures はコミットする)
+# ローカルの一時実験ファイル (fixtures はコミットする)
 spike/tmp/
 
 # ZMUSIC.X 実バイナリ (再配布不可、globalStorage 経由で取得)

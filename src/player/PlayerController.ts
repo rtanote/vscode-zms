@@ -148,7 +148,7 @@ export class PlayerController implements vscode.Disposable {
       );
       return;
     }
-    // V3 (ZMSC3.X) は v1 では再生非対応 (仕様書 docs/V3_SUPPORT.md 参照)。
+    // V3 (ZMSC3.X) は現状再生非対応 (docs/V3_SUPPORT.md 参照)。
     // 文法チェック・シンタックスハイライトは動くが、compile/再生は v2 の
     // ZMUSIC.X ドライバでは扱えないので中止して案内を出す。
     if (detectVersion(editor.document) === "3") {

@@ -3,7 +3,7 @@ name: Build z-music.js WASM
 # 手動 or 週次で走らせて WASM 再現ビルドを検証。
 # 成果物 (zmusic.js / zmusic.wasm) は artifact としてダウンロード可能にし、
 # 実際のコミット対象は開発者ローカルで `scripts/build-zmusic.sh` を回したものにする
-# (仕様書 §2.15 リポジトリ構成)。
+# 実際のコミット対象は開発者ローカルで手動ビルドしたものにする。
 
 on:
   workflow_dispatch:

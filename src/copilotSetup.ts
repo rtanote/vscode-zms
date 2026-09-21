@@ -14,7 +14,7 @@ const MANAGED_BLOCK_RE = new RegExp(
  * 初回 `.zms` オープン時に、Copilot 命令ファイルがまだ無い workspace で
  * さりげなく Setup コマンドを案内する。「表示しない」で workspaceState に
  * 記録して以降は静かに黙る。end-user が Marketplace 経由でインストールした
- * 時の Setup コマンド発見動線 (仕様書 Phase 3)。
+ * 時の Setup コマンド発見動線。
  */
 export async function maybePromptCopilotSetup(context: vscode.ExtensionContext): Promise<void> {
   const ws = vscode.workspace.workspaceFolders?.[0];

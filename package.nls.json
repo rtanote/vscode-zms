@@ -30,7 +30,7 @@
   "config.trace.enabled.description": "Highlight the currently sounding note in the editor while playing.",
   "config.trace.lineHighlight.description": "Also apply a faint background colour to the whole line while highlighting.",
   "config.trace.followCursor.description": "Scroll the editor when the lowest-numbered playing track's position moves out of view.",
-  "config.trace.ptrAdjust.description": "p_data_pointer offset. Adjust by ±1 to a few bytes if playback appears one note ahead or behind (settled during the Phase 0 spike).",
+  "config.trace.ptrAdjust.description": "p_data_pointer offset. Adjust by ±1 to a few bytes if playback highlight appears one note ahead or behind the audible note.",
   "config.trace.palette.description": "Per-track highlight colours (8 cycled).",
   "config.audio.bufferSize.description": "Web Audio buffer size (256..8192).",
   "config.player.revealOnPlay.description": "Reveal the Player view automatically when playback starts."

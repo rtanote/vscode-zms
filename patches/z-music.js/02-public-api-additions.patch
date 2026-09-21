@@ -201,7 +201,7 @@ index 171f2d0..fb82071 100644
 +  /**
 +   * Manually advances the emulator by one audio buffer's worth of samples
 +   * without touching the Web Audio graph. Used by the vscode-zms silent
-+   * fast-forward path (spec §2.20 Phase 4): after ZMUSIC.disconnect() the
++   * fast-forward path (Shift+F5 from cursor): after ZMUSIC.disconnect() the
 +   * scriptProcessor stops firing, so its normal cadence of _zmusic_update
 +   * calls halts too; this exposes the same function so the extension can
 +   * drive playback ahead of real time and reach a target step counter

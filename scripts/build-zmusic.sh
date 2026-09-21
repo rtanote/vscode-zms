@@ -5,7 +5,7 @@
 # 前提:
 #   - third_party/z-music.js/ を submodule として初期化済
 #     (git submodule update --init --recursive)
-#   - patches/z-music.js/*.patch が仕様書 §2.2.1〜2.2.3 の差分
+#   - patches/z-music.js/*.patch の差分
 #   - Docker が動く環境 (macOS / Linux / Windows WSL)
 #
 # 使い方:

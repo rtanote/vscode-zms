@@ -12,13 +12,13 @@ import * as path from "node:path";
  *   2. `context.globalStorageUri` 直下のキャッシュ
  *   3. QuickPick で 「ダウンロード / ローカル指定」 を提示
  *
- * ダウンロード成功時は SHA-256 を仕様書の既知値と照合し、不一致なら破棄。
+ * ダウンロード成功時は SHA-256 を既知値と照合し、不一致なら破棄。
  * 初回取得時に著作権通知 (西川善司氏 / Z-MUSIC SYSTEM) を出す。
  */
 export class DriverManager {
   /**
-   * 仕様書 §2.10 記載の 2026-09-07 時点の toyoshim/z-music.js 収録 ZMUSIC208.X ハッシュ。
-   * 実装検証時に再取得して更新することを想定 (const にしているのは意図的固定)。
+   * toyoshim/z-music.js 収録 ZMUSIC208.X の SHA-256 (2026-09-07 時点で pin)。
+   * 上流更新時は再取得して手動更新する (const にしているのは意図的固定)。
    */
   static readonly EXPECTED_SHA256 =
     "7f066d4dbbe6e07e91463e78005b2cc01a23b3453ba3c3da178474ef1244efdf";

@@ -28,7 +28,7 @@
   "config.trace.enabled.description": "再生中に発音位置をエディタ上でハイライトする。",
   "config.trace.lineHighlight.description": "ハイライト時に行全体にも薄い背景色を付ける。",
   "config.trace.followCursor.description": "最も番号の小さい演奏中トラックの位置が可視範囲外に出たときエディタをスクロールする。",
-  "config.trace.ptrAdjust.description": "p_data_pointer 補正値。実測で「1音先行/遅延」が見えた場合に調整する (負値可)。Phase 0 スパイクで確定。",
+  "config.trace.ptrAdjust.description": "p_data_pointer 補正値。ハイライトが実際の発音より 1 音前後にずれて見える場合に ±1〜数バイトで調整する (負値可)。",
   "config.trace.palette.description": "トラック別ハイライト色 (8 色循環)。",
   "config.audio.bufferSize.description": "Web Audio バッファサイズ (256〜8192)。",
   "config.player.revealOnPlay.description": "再生開始時にプレイヤービューを自動で表示する。"

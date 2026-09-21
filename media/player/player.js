@@ -598,7 +598,7 @@
   function reportAudioState() {
     // ZMUSIC の内部で AudioContext を保持しているため、その状態を推測。
     // ここでは初回のクリック要求は toolbar 側で扱う。
-    // 詳細はスパイクで確認予定 (Phase 0)。
+    // TODO: 実際の AudioContext 状態を直接読める API があれば置き換える。
     try {
       const ctx = (window.__ZMUSIC_AUDIO_CTX__) || null;
       if (ctx && ctx.state === "suspended") {
