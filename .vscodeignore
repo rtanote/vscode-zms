@@ -5,6 +5,8 @@
 .docs/**
 docs/**
 !docs/GPL-2.txt
+docs-local/**
+CLAUDE.md
 .gitignore
 .gitattributes
 .gitmodules
@@ -13,6 +15,7 @@ src/**
 test/**
 test-fixtures/**
 test-local/**
+samples/**
 out/test/**
 spec/**
 patches/**
