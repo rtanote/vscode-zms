@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <!--
+    Z-MUSIC v2 Player VS Code extension icon.
+    "ZMS" ワードマーク + 1 オクターブミニ鍵盤の 2 段構成、左右中央揃え。
+    背景は X68000 由来の deep navy。C key をトラックパレット色 (#FF9900)
+    でハイライトして「音が鳴っている」状態を象徴。
+  -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1a2540"/>
+      <stop offset="1" stop-color="#0d1526"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="128" height="128" rx="20" fill="url(#bg)"/>
+
+  <!-- "ZMS" wordmark, centered horizontally -->
+  <text x="64" y="52"
+        font-family="Verdana, Geneva, sans-serif"
+        font-size="38" font-weight="900"
+        fill="#7fa6ff"
+        letter-spacing="1"
+        text-anchor="middle">ZMS</text>
+
+  <!--
+    Piano keyboard band (7 white keys + 5 black keys = 1 octave).
+    白鍵幅 14 × 7 = 98 total、canvas 128 中央に配置 → x offset = 15
+    y 位置は "ZMS" の下、キャンバス下端まで少し余白を残す形。
+  -->
+  <g transform="translate(15, 66)">
+    <!-- White keys (7 across, 14px wide each) -->
+    <g fill="#f2f2f2" stroke="#333" stroke-width="1">
+      <rect x="0"   y="0" width="14" height="52" rx="1.5"/>
+      <rect x="14"  y="0" width="14" height="52" rx="1.5"/>
+      <rect x="28"  y="0" width="14" height="52" rx="1.5"/>
+      <rect x="42"  y="0" width="14" height="52" rx="1.5"/>
+      <rect x="56"  y="0" width="14" height="52" rx="1.5"/>
+      <rect x="70"  y="0" width="14" height="52" rx="1.5"/>
+      <rect x="84"  y="0" width="14" height="52" rx="1.5"/>
+    </g>
+    <!-- Highlighted C key (leftmost white), track-palette orange -->
+    <rect x="0" y="0" width="14" height="52" rx="1.5"
+          fill="#FF9900" opacity="0.9" filter="url(#glow)"/>
+    <!-- Black keys — 8px wide, 32px tall -->
+    <g fill="#1e1e1e">
+      <rect x="10"  y="0" width="8" height="32" rx="1"/>
+      <rect x="24"  y="0" width="8" height="32" rx="1"/>
+      <rect x="52"  y="0" width="8" height="32" rx="1"/>
+      <rect x="66"  y="0" width="8" height="32" rx="1"/>
+      <rect x="80"  y="0" width="8" height="32" rx="1"/>
+    </g>
+    <!-- Subtle top edge lighting on white keys -->
+    <rect x="0" y="0" width="98" height="1.5" fill="#ffffff" opacity="0.5"/>
+  </g>
+</svg>

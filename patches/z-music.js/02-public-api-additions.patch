@@ -1,0 +1,214 @@
+diff --git a/src/prolog.js b/src/prolog.js
+index 171f2d0..fb82071 100644
+--- a/src/prolog.js
++++ b/src/prolog.js
+@@ -26,7 +26,13 @@ var bPrint = function (s) {
+   for (var i = 0; i < lines.length - 1; ++i) {
+     if (lines[i].indexOf('has been released from your system.') >= 0)
+       continue;
+-    console.info(bEscape(lines[i]));
++    var line = bEscape(lines[i]);
++    // vscode-zms spec Sec. 2.2.3: redirect driver output to a host-supplied
++    // callback so the extension can pipe it into its output channel.
++    if (ZMUSIC && typeof ZMUSIC.onMessage === 'function')
++      ZMUSIC.onMessage(line);
++    else
++      console.info(line);
+   }
+   bPrintBuffer = lines[lines.length - 1];
+ };
+@@ -263,6 +269,11 @@ var zmusicReady = function (code) {
+   zmusicResolver.resolve();
+ };
+ 
++// Runtime driver loading (spec Sec. 2.2.2). The vscode-zms extension injects
++// ZMUSIC208.X via install({driver:{name, data}}) so the .wasm can be shipped
++// on Marketplace without the (non-redistributable-by-us) driver embedded.
++var pendingDriver = null;
++
+ var Module = {
+   // Default arguments.
+   arguments: [
+@@ -282,6 +293,12 @@ var Module = {
+     // Resets this function so that this should not be called recursively during
+     // the following run().
+     Module.onRuntimeInitialized = null;
++    // If install() supplied a runtime driver, write it into Emscripten FS
++    // before main() reads it.
++    if (pendingDriver) {
++      Module.FS.writeFile(pendingDriver.name, new Uint8Array(pendingDriver.data));
++      pendingDriver = null;
++    }
+     // Calls run() again, but with the revised arguments.
+     run(Module.arguments);
+     // Restores the original |shouldRunNow| so that doRun() does not call main()
+@@ -319,7 +336,9 @@ ZMUSIC = {
+       zmusicPlaying = opt.autostart || !isMobileSafari;
+       audioBufferSize = opt.buffer || 2048;
+       audioContext = opt.context;
+-      if (opt.midi !== false && navigator.requestMIDIAccess) {
++      // vscode-zms spec Sec. 2.2.3: default midi to OFF to avoid the VS Code
++      // MIDI permission prompt (MIDI output is an explicit non-goal for v1).
++      if (opt.midi === true && navigator.requestMIDIAccess) {
+         navigator.permissions.query({ name: "midi", sysex: true }).then(p => {
+           var sysex = p.state != "denied";
+           navigator.requestMIDIAccess({ sysex: sysex }).then(a => {
+@@ -327,8 +346,16 @@ ZMUSIC = {
+           });
+         });
+       }
+-      if (args)
++      // Runtime driver load (spec Sec. 2.2.2).
++      if (opt.driver && opt.driver.name && opt.driver.data) {
++        pendingDriver = { name: opt.driver.name, data: opt.driver.data };
++        // Rewrite Module.arguments[0] so main() opens the injected file.
++        var effectiveArgs = args ? args.slice() : Module.arguments.slice();
++        effectiveArgs[0] = opt.driver.name;
++        Module.arguments = effectiveArgs;
++      } else if (args) {
+         Module.arguments = args;
++      }
+       state = ZMUSIC.STARTING;
+       zmusicResolver = { resolve: resolve, reject: reject };
+       Module.removeRunDependency("initialize");
+@@ -410,39 +437,54 @@ ZMUSIC = {
+   },
+ 
+   /**
+-   * Plays ZMS data after compiling it.
+-   * @param {ArrayBuffer} data to write
+-   * @return {Promise<number>} promise
++   * Compiles ZMS data (spec Sec. 2.2.3 split of compileAndPlay).
++   * Returns 0 on success — the caller is expected to walk the ZMD work area
++   * (via ZMUSIC.trap($45)/peek/…) before calling ZMUSIC.start().
++   * @param {ArrayBuffer} data ZMS source
++   * @return {Promise<number>} 0 on success, error code otherwise
+    */
+-  compileAndPlay: function (data) {
++  compile: function (data) {
+     if (resolver)
+-      return;
+-
++      return null;
+     return new Promise(function (success, error) {
+       if (zmusicPlaying)
+         ZMUSIC.stop();
+       if (ZMUSIC.state == ZMUSIC.WAITING && !window.AudioContext)
+         bufferSource.noteOn(0);
+-      ZMUSIC.state = ZMUSIC.PLAYING;
+ 
+       var d8 = new Uint8Array(data);
+       for (var i = 0; i < data.byteLength; ++i)
+         Module.HEAPU8[zmusicBuffer + i] = d8[i];
+-      resolver = code => {
+-        if (code == 0) {
+-          ZMUSIC.trap(0x08, 0, 0, 0, 0, null);
+-          zmusicPlaying = true;
+-          success(0);
+-        } else {
+-          error(code);
+-        }
+-      };
++      resolver = code => (code == 0 ? success(0) : error(code));
+       var result = Module._zmusic_copy(data.byteLength);
+       if (result != -2)
+         resolve(result);
+     });
+   },
+ 
++  /**
++   * Issues trap $08 (m_play) to start playback of the most recently
++   * compiled ZMD (spec Sec. 2.2.3). Safe to call synchronously after
++   * compile() resolves.
++   */
++  start: function () {
++    ZMUSIC.state = ZMUSIC.PLAYING;
++    ZMUSIC.trap(0x08, 0, 0, 0, 0, null);
++    zmusicPlaying = true;
++  },
++
++  /**
++   * Plays ZMS data after compiling it (retained for backwards compat).
++   * @param {ArrayBuffer} data to write
++   * @return {Promise<number>} promise
++   */
++  compileAndPlay: function (data) {
++    return ZMUSIC.compile(data).then(function () {
++      ZMUSIC.start();
++      return 0;
++    });
++  },
++
+   /**
+    * Connects audio output node to |node| instead of default destination.
+    * @param {AudioNode} node AudioNode to connect for outputs
+@@ -483,6 +525,69 @@ ZMUSIC = {
+       }
+     }
+     return Module._zmusic_trap(d1, d2, d3, d4, a1);
++  },
++
++  /**
++   * Reads one value from the emulator's memory. `size` follows run68.h
++   * (S_BYTE=0, S_WORD=1, S_LONG=2). Wraps _mem_get, exported since
++   * upstream. (vscode-zms spec Sec. 2.2.3)
++   */
++  peek: function (addr, size) {
++    return Module._mem_get(addr, size);
++  },
++
++  /**
++   * Reads `len` bytes into a Uint8Array. Zero-copy — the returned view
++   * aliases the emulator heap, so copy it before letting the emulator run
++   * further if you need a stable snapshot.
++   */
++  peekBytes: function (addr, len) {
++    return Module.HEAPU8.subarray(addr, addr + len);
++  },
++
++  /**
++   * Returns the value of address register a[n] captured right after the
++   * most recent trap #3 completed. trap #3 functions $3c/$45/$3a/$50
++   * return a work-area pointer in a0.
++   */
++  areg: function (n) {
++    return Module._zmusic_get_areg(n);
++  },
++
++  /**
++   * Same for data register d[n].
++   */
++  dreg: function (n) {
++    return Module._zmusic_get_dreg(n);
++  },
++
++  /**
++   * Replaces bPrint's default console.info sink. Set to null to restore.
++   * The callback receives one line at a time (no trailing newline).
++   */
++  onMessage: null,
++
++  /**
++   * Registers an async file-open callback used by the DOS _OPEN emulation
++   * (spec Sec. 2.12 — the extension supplies ZPD/binary data on demand).
++   * Passing null restores the default XHR loader.
++   * @param {(name:string) => Promise<ArrayBuffer|null>} fn
++   */
++  setFileOpenCallback: function (fn) {
++    fileOpenCallback = fn;
++  },
++
++  /**
++   * Manually advances the emulator by one audio buffer's worth of samples
++   * without touching the Web Audio graph. Used by the vscode-zms silent
++   * fast-forward path (spec §2.20 Phase 4): after ZMUSIC.disconnect() the
++   * scriptProcessor stops firing, so its normal cadence of _zmusic_update
++   * calls halts too; this exposes the same function so the extension can
++   * drive playback ahead of real time and reach a target step counter
++   * before reattaching the destination.
++   */
++  update: function () {
++    return Module._zmusic_update();
+   }
+ };
+ 

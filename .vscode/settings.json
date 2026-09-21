@@ -1,0 +1,14 @@
+{
+  "github.copilot.chat.codeGeneration.useInstructionFiles": true,
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": ".github/copilot-instructions.md"
+    },
+    {
+      "text": "This is a Sharp X68000 Z-MUSIC v2.08 MML repository. In .zms files: voice definitions ALWAYS start with '(V n,0,...)' or '(@n,...)' with exactly 55 parameters, one line per operator. NEVER emit '@1 = ...' or '@1 { ... }' or '@1 ( ... )' — Z-MUSIC has no assignment operator. When asked for a default/sine/init voice, copy the canonical template from .github/copilot-instructions.md verbatim. See test-fixtures/voices.zms for working examples."
+    }
+  ],
+  "github.copilot.chat.codeGeneration.instructionsFilesLocations": [
+    ".github/copilot-instructions.md"
+  ]
+}

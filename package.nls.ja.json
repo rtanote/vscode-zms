@@ -1,0 +1,35 @@
+{
+  "displayName": "Z-MUSIC v2 Player",
+  "description": "SHARP X68000 用 Z-MUSIC v2.08 MML (.zms) エディタ — シンタックスハイライト・音色定義バリデーション・WASM エミュレータ再生 (FM+ADPCM)・トラック別追従・mmdsp テイストの鍵盤ビジュアライザ・abcjs 譜面プレビュー・Copilot 統合",
+
+  "command.play.title": "Z-MUSIC: コンパイル & 再生",
+  "command.playFromCursor.title": "Z-MUSIC: カーソル位置から再生",
+  "command.stop.title": "Z-MUSIC: 停止",
+  "command.fadeOut.title": "Z-MUSIC: フェードアウト",
+  "command.toggleTrace.title": "Z-MUSIC: 追従ハイライトの ON/OFF",
+  "command.showPlayer.title": "Z-MUSIC: Player パネルを表示",
+  "command.dumpZmd.title": "Z-MUSIC: コンパイル済 ZMD をダンプ (デバッグ)",
+  "command.reportIssue.title": "Z-MUSIC: 不具合を報告",
+  "command.selectDriver.title": "Z-MUSIC: ZMUSIC.X を選択",
+  "command.showSheetMusic.title": "Z-MUSIC: 譜面プレビューを表示",
+  "command.selectVersion.title": "Z-MUSIC: 文法バージョン切替 (V2 / V3 / Auto)",
+  "command.setupCopilotInstructions.title": "Z-MUSIC: Copilot 命令ファイルを workspace にセットアップ",
+
+  "viewsContainer.zmusicPanel.title": "Z-MUSIC Player",
+  "view.playerView.name": "Player",
+  "view.playerView.contextualTitle": "Z-MUSIC Player",
+
+  "config.title": "Z-MUSIC",
+  "config.syntax.version.description": "文法チェック等で参照する Z-MUSIC バージョン。`auto` の場合、ファイル先頭の magic comment (`/ zmusic-version: 2` 等) を優先し、無ければ内容ヒューリスティックで判定 (現状は常に v2)。V3 モードでは範囲チェックは無効 (未実装)。",
+  "config.driver.path.description": "ZMUSIC.X ドライバファイルのローカルパス。指定があれば globalStorage のキャッシュより優先される。",
+  "config.driver.downloadUrl.description": "ZMUSIC.X の取得先 URL。初回起動時に QuickPick からダウンロードを選ぶとここから取得する。",
+  "config.driver.version.description": "使用する ZMUSIC.X のバージョン。v1 スコープでは 2.08 のみ検証済。",
+  "config.driverArgs.description": "ZMUSIC.X 起動時のコマンドラインオプション。",
+  "config.trace.enabled.description": "再生中に発音位置をエディタ上でハイライトする。",
+  "config.trace.lineHighlight.description": "ハイライト時に行全体にも薄い背景色を付ける。",
+  "config.trace.followCursor.description": "最も番号の小さい演奏中トラックの位置が可視範囲外に出たときエディタをスクロールする。",
+  "config.trace.ptrAdjust.description": "p_data_pointer 補正値。実測で「1音先行/遅延」が見えた場合に調整する (負値可)。Phase 0 スパイクで確定。",
+  "config.trace.palette.description": "トラック別ハイライト色 (8 色循環)。",
+  "config.audio.bufferSize.description": "Web Audio バッファサイズ (256〜8192)。",
+  "config.player.revealOnPlay.description": "再生開始時にプレイヤービューを自動で表示する。"
+}

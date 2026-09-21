@@ -1,0 +1,3 @@
+[submodule "third_party/z-music.js"]
+	path = third_party/z-music.js
+	url = https://github.com/toyoshim/z-music.js.git

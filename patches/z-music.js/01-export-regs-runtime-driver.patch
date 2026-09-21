@@ -1,0 +1,59 @@
+diff --git a/Makefile b/Makefile
+index 769ffe5..3b53f13 100644
+--- a/Makefile
++++ b/Makefile
+@@ -12,14 +12,31 @@ CC	= emcc
+ DEFS	= -DFNC_TRACE -DENV_FROM_INI -DEMSCRIPTEN_KEEPR
+ INCS	= -include $(MOD68)/preinc.h -I $(RUN68) -I $(OPM) -I $(ZMSC2)/compat
+ OFLAGS  = -Oz
+-CFLAGS	= $(DEFS) $(INCS) $(OFLAGS)
++# run68 is 90s-era C using K&R prototypes and SJIS string literals; modern
++# clang (emsdk 3.1.60+) turns implicit-int / implicit-func-decl / deprecated
++# -non-prototype / invalid-source-encoding / int-conversion / incompatible
++# -pointer-types into hard errors by default. Downgrade them so upstream
++# sources build unmodified.
++WARNS	= -Wno-error=implicit-int \
++	  -Wno-error=implicit-function-declaration \
++	  -Wno-error=deprecated-non-prototype \
++	  -Wno-error=invalid-source-encoding \
++	  -Wno-error=int-conversion \
++	  -Wno-error=incompatible-pointer-types
++# `-c` was implicit for `.o` output in older emcc; emsdk 3.1.60+ requires
++# it explicitly, otherwise wasm-ld is invoked and fails to resolve the
++# other TUs' symbols.
++CFLAGS	= -c $(DEFS) $(INCS) $(OFLAGS) $(WARNS)
+ CXXFLAGS= $(CFLAGS) -fno-operator-names
+-ZMFUNCS	= '_zmusic_init', '_zmusic_update', '_zmusic_trap', '_zmusic_copy'
++ZMFUNCS	= '_zmusic_init', '_zmusic_update', '_zmusic_trap', '_zmusic_copy', \
++	  '_zmusic_get_areg', '_zmusic_get_dreg'
+ RTFUNCS = '_main', '_mem_get', '_mem_set', '_async_done'
+-EXPORTS	= -s EXPORTED_FUNCTIONS="[$(RTFUNCS), $(ZMFUNCS)]"
++EXPORTS	= -s EXPORTED_FUNCTIONS="[$(RTFUNCS), $(ZMFUNCS)]" \
++	  -s EXPORTED_RUNTIME_METHODS="['FS','addRunDependency','removeRunDependency','AsciiToString','UTF8ToString','intArrayFromString','HEAPU8','HEAP16']"
+ RUNTIME	= --js-library $(ZMSC2)/runtime68.js
+-EMBED	= --embed-file x/ZMUSIC110.X@ZMUSIC110.X \
+-	  --embed-file x/ZMUSIC208.X@ZMUSIC208.X
++# ZMUSIC.X binaries are no longer embedded — vscode-zms passes the driver
++# at runtime via ZMUSIC.install({driver:{name,data}}). See spec Sec. 2.2.2.
++EMBED	=
+ LDFLAGS	= -lm $(OFLAGS) $(RUNTIME) $(EXPORTS) -s WASM=0 --memory-init-file 0 $(EMBED)
+ WFLAGS	= -lm $(OFLAGS) $(RUNTIME) $(EXPORTS) -s WASM=1 $(EMBED)
+ CSRCS	= \
+diff --git a/src/zmusic.cpp b/src/zmusic.cpp
+index 8e6beda..d95b15f 100644
+--- a/src/zmusic.cpp
++++ b/src/zmusic.cpp
+@@ -304,6 +304,13 @@ extern "C" int zmusic_copy(ULong size) {
+   return run_fsm();
+ }
+ 
++// Register accessors for the debugger / tracer host (Sec. 2.2.1 of the
++// vscode-zms player spec). trap #3 functions $3c/$45/$3a/$50 return a
++// pointer in a0; the JS layer needs read access to a[n] and d[n] right
++// after trap so it can walk the ZMD work area.
++extern "C" ULong zmusic_get_areg(int n) { return ra[n & 7]; }
++extern "C" ULong zmusic_get_dreg(int n) { return rd[n & 7]; }
++
+ extern "C" int pcm8_call() {
+   switch (rd[0] & 0xffff) {
+     case 0x000:  // Normal play at ch.0

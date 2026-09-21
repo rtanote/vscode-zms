@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Z-MUSIC Player</title>
+  <link rel="stylesheet" href="__CSS__">
+</head>
+<body>
+  <div id="root">
+    <div id="toolbar">
+      <button id="btn-play" title="Play (F5)">▶</button>
+      <button id="btn-stop" title="Stop (F9)">■</button>
+      <button id="btn-fade" title="Fade Out (Shift+F9)">▼</button>
+      <button id="btn-enable-audio" hidden>音を有効化</button>
+      <span id="status">Idle</span>
+    </div>
+    <div id="tracks"></div>
+    <div id="hint">再生には ZMS ドキュメント上で F5 (もしくは ▶) を押してください</div>
+  </div>
+  <script src="__ZMUSIC_JS__"></script>
+  <script src="__PLAYER_JS__"></script>
+</body>
+</html>

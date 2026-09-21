@@ -1,0 +1,341 @@
+{
+  "name": "Z-MUSIC",
+  "scopeName": "source.zmusic",
+  "patterns": [
+    { "include": "#comment-directive" },
+    { "include": "#comments" },
+    { "include": "#string-literal" },
+    { "include": "#dot-command" },
+    { "include": "#paren-command" },
+    { "include": "#bracket-command" },
+    { "include": "#chord" },
+    { "include": "#data-block" },
+    { "include": "#at-tone-number" },
+    { "include": "#panpot" },
+    { "include": "#at-command" },
+    { "include": "#x-command" },
+    { "include": "#hex-number" },
+    { "include": "#binary-number" },
+    { "include": "#decimal-number" },
+    { "include": "#dot-duration" },
+    { "include": "#notes" },
+    { "include": "#octave" },
+    { "include": "#z-command" },
+    { "include": "#param-command" },
+    { "include": "#repeat" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.slash.zmusic",
+          "match": "/.*$"
+        }
+      ]
+    },
+    "comment-directive": {
+      "patterns": [
+        {
+          "name": "comment.line.directive.zmusic",
+          "match": "(?i)^\\s*\\.comment\\b.*$"
+        }
+      ]
+    },
+    "string-literal": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.zmusic",
+          "match": "\"[^\"]*\""
+        }
+      ]
+    },
+    "dot-command": {
+      "comment": "行頭ドット命令 (.adpcm_block_data, .FM_master_volume 等)。命令名だけ match すると引数 (ファイル名等) が main patterns に fall through して 'PARADE.ZPD' の R が rest 音符と誤認される。begin/end で行末まで包み、内側で数値だけは decimal/hex として色付けする。引数のうち英字始まりのトークン (ファイル名やシンボル名) は string 系 scope に落として音符スコープを回避。",
+      "patterns": [
+        {
+          "begin": "(?i)^\\s*\\.[a-z_][a-z0-9_.]*",
+          "end": "$",
+          "beginCaptures": {
+            "0": { "name": "keyword.control.directive.zmusic" }
+          },
+          "patterns": [
+            { "include": "#comments" },
+            { "include": "#hex-number" },
+            { "include": "#binary-number" },
+            { "include": "#decimal-number" },
+            {
+              "name": "string.unquoted.directive-arg.zmusic",
+              "match": "[A-Za-z_][A-Za-z0-9_.]*"
+            }
+          ]
+        }
+      ]
+    },
+    "paren-command": {
+      "patterns": [
+        {
+          "name": "entity.name.section.paren-command.zmusic",
+          "begin": "\\(",
+          "end": "\\)",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.paren.begin.zmusic" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.section.paren.end.zmusic" }
+          },
+          "patterns": [
+            { "include": "#comments" },
+            { "include": "#hex-number" },
+            { "include": "#decimal-number" },
+            {
+              "name": "variable.parameter.paren.zmusic",
+              "match": "[a-zA-Z][a-zA-Z0-9_.\\- ]*"
+            }
+          ]
+        }
+      ]
+    },
+    "bracket-command": {
+      "patterns": [
+        {
+          "name": "entity.name.tag.navigation.zmusic",
+          "begin": "\\[",
+          "end": "\\]",
+          "beginCaptures": {
+            "0": { "name": "entity.name.tag.navigation.zmusic" }
+          },
+          "endCaptures": {
+            "0": { "name": "entity.name.tag.navigation.zmusic" }
+          },
+          "patterns": [
+            { "include": "#hex-number" },
+            { "include": "#decimal-number" },
+            {
+              "comment": "[KEYWORD] 命令リスト。V2 継承分 (do/loop/end/k.sign/segno/coda 等) に加えて V3 で導入された拡張 [KEYWORD arg] 群を網羅する (docs-local/zmusic-v3/ZM5.MAN §5.3 参照)。カテゴリ: 基本 MML 等価物 / 変調 (vibrato, agogik, velocity, aftertouch) / MIDI-GS / トラック管理 / エフェクト / エクスクルーシブ。全て entity.name.tag.navigation scope に統一し、bracket 全体の緑 bold と一致させる。",
+              "name": "entity.name.tag.navigation.zmusic",
+              "match": "(?i)\\b(?:do|loop|end|pcm_mode|voice_reserve|k\\.sign|key_signature|pattern|embed|jump|d\\.c\\.|d\\.s\\.|segno|tocoda|coda|fine|comment|bar|measure|meter|key|dummy|instrument_id|event|poke|control|synchronize|timer|all_sound_off|gm_system_on|fm|adpcm|midi|opm|opm\\.lfo|slot_separration|noise|damper|tie_mode|timbre|timbre_bank|timbre_split|timbre_split\\.switch|program|program_bank|program_split|program_split\\.switch|volume|velocity|velocity\\.(?:delay|depth|level|origin|phase|speed|switch|sync|waveform)|tempo|panpot|bend|bend\\.(?:range|switch)|portament|auto_portament|auto_portament\\.switch|push_portament|pull_portament|vibrato\\.(?:deepen|delay|depth|mode|speed|switch|sync|waveform)|agogik\\.(?:deepen|delay|depth|level|speed|switch|sync|waveform)|aftertouch\\.(?:delay|level|switch|sync)|arcc|frequency|pitch|echo|effect|effect\\.(?:chorus|delay|reverb)|track_fader|track_delay|track_mode|ch_fader|ch_assign|ch_pressure|polyphonic_pressure|master_fader|assign|replay|nrpn|midi_data|send_to_m|sc|mt|roland_exclusive|yamaha_exclusive|gs_(?:init|reset|chorus|reverb|display|drum_name|drum_setup|part_parameter|part_setup|partial_reserve|print|v_reserve)|u|m)\\b"
+            },
+            {
+              "name": "variable.parameter.bracket.zmusic",
+              "match": "[a-zA-Z_.][a-zA-Z0-9_.]*"
+            }
+          ]
+        }
+      ]
+    },
+    "chord": {
+      "patterns": [
+        {
+          "name": "meta.chord.zmusic",
+          "begin": "'",
+          "end": "'",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.chord.begin.zmusic" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.chord.end.zmusic" }
+          },
+          "patterns": [
+            {
+              "name": "zmusic.note.zmusic",
+              "match": "[a-gA-G][+\\-#!]?"
+            },
+            { "include": "#octave" },
+            { "include": "#decimal-number" },
+            { "include": "#dot-duration" }
+          ]
+        }
+      ]
+    },
+    "data-block": {
+      "patterns": [
+        {
+          "name": "meta.data-block.zmusic",
+          "begin": "\\{",
+          "end": "\\}[0-9]*",
+          "beginCaptures": {
+            "0": { "name": "punctuation.section.block.begin.zmusic" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.section.block.end.zmusic" }
+          },
+          "patterns": [
+            { "include": "#comments" },
+            { "include": "#string-literal" },
+            { "include": "#hex-number" },
+            { "include": "#binary-number" },
+            { "include": "#decimal-number" },
+            { "include": "#notes" },
+            { "include": "#octave" },
+            { "include": "#at-tone-number" },
+            { "include": "#panpot" },
+            { "include": "#at-command" },
+            { "include": "#z-command" },
+            { "include": "#param-command" },
+            {
+              "name": "punctuation.separator.comma.zmusic",
+              "match": ","
+            },
+            {
+              "comment": "上記の MML rule に含まれなかった識別子系 (data-block 独自のラベル等) の fallback。p1r や V12r のような複数コマンド連結をここまで来る前に param-command 側で分解する。",
+              "name": "variable.parameter.block.zmusic",
+              "match": "(?i)[a-z_][a-z0-9_.]*"
+            }
+          ]
+        }
+      ]
+    },
+    "at-tone-number": {
+      "patterns": [
+        {
+          "name": "constant.other.tone-number.zmusic",
+          "match": "@[0-9]+"
+        }
+      ]
+    },
+    "at-command": {
+      "patterns": [
+        {
+          "comment": "@ コマンド: @k0, @k-5, @V120, @w*192 など、letter + 符号 + '*' + 数字 + 小数点を 1 単位で match。0 や -5 が別 scope に落ちて可読性を落とす問題の対策。",
+          "name": "keyword.control.at-command.zmusic",
+          "match": "(?i)@[a-z]+[+\\-]?\\*?[0-9]*\\.*"
+        }
+      ]
+    },
+    "x-command": {
+      "patterns": [
+        {
+          "name": "keyword.control.exclusive.zmusic",
+          "match": "(?i)(?<![a-zA-Z_])x(?=\\$)"
+        }
+      ]
+    },
+    "hex-number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.hex.zmusic",
+          "match": "\\$[0-9a-fA-F]+"
+        }
+      ]
+    },
+    "binary-number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.binary.zmusic",
+          "match": "%[01]+"
+        }
+      ]
+    },
+    "decimal-number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.decimal.zmusic",
+          "match": "\\*?-?[0-9]+"
+        }
+      ]
+    },
+    "dot-duration": {
+      "patterns": [
+        {
+          "name": "constant.numeric.dot.zmusic",
+          "match": "(?<=[0-9])\\.\\.?"
+        }
+      ]
+    },
+    "notes": {
+      "patterns": [
+        {
+          "comment": "音符: 音階文字 + 臨時記号 + 任意の音長 spec (*n, n, n., n^n など) を 1 単位で match。scope は theme の default text 色にしたいので標準的な TextMate 分類名を避け zmusic.note を使う。",
+          "name": "zmusic.note.zmusic",
+          "match": "[a-gA-G][+\\-#!]?\\*?[0-9]*\\.*(?:\\^[0-9]*\\.*)*"
+        },
+        {
+          "comment": "休符: r + 音長 spec を 1 単位。theme の keyword.other 色 (多くの dark theme で reddish) を r*4 全体に適用。",
+          "name": "keyword.other.rest.zmusic",
+          "match": "(?i)r\\*?[0-9]*\\.*(?:\\^[0-9]*\\.*)*"
+        }
+      ]
+    },
+    "octave": {
+      "patterns": [
+        {
+          "comment": "オクターブ: o5 / o-1 / '<' / '>'。先頭の lookbehind は Ao5 のような直後配置で octave を認識できなくする副作用があるので付けない (o-?[0-9]+ は 1 桁以上必須のため 'voice' の 'o' を誤検出しない)。",
+          "name": "keyword.control.octave.zmusic",
+          "match": "(?i)o-?[0-9]+|[<>]"
+        }
+      ]
+    },
+    "z-command": {
+      "patterns": [
+        {
+          "name": "variable.parameter.velocity-sequence.zmusic",
+          "match": "(?i)(?<![a-zA-Z_])z-?[0-9]+(?:,-?[0-9]+)*"
+        }
+      ]
+    },
+    "panpot": {
+      "comment": "パンポット系: Pn (P0..P3), @Pn (@P0..@P127) を独立 scope に切り出し、PanpotDecorator で黄色を強制。param-command / at-command より優先させる必要があるので main patterns 上位に include。",
+      "patterns": [
+        {
+          "name": "variable.parameter.panpot.zmusic",
+          "match": "(?i)@p[0-9]+"
+        },
+        {
+          "name": "variable.parameter.panpot.zmusic",
+          "match": "(?i)(?<![a-zA-Z_])p[0-9]+"
+        }
+      ]
+    },
+    "param-command": {
+      "comment": "音量・音長・パン以外の値ベースのパラメータコマンド。V/Q/L/U/K (+digits) と、相対音量 ~n / _n (n 省略可: 前回設定した delta を再利用) を同じ scope に統一。P (パンポット) は panpot rule で独立 scope に切り出し済み。",
+      "patterns": [
+        {
+          "name": "variable.parameter.zmusic",
+          "match": "(?i)(?<![a-zA-Z_])[qvluk][+\\-]?[0-9]+"
+        },
+        {
+          "name": "variable.parameter.zmusic",
+          "match": "[~_][0-9]*"
+        }
+      ]
+    },
+    "repeat": {
+      "comment": "リピート系: |:n (start with count), :| (end), |n (repeat alt), 単独 | (小節線/システム内区切り)。すべて制御フローとみなして [Coda] 系と同じ entity.name.tag.navigation scope に統一。順序: 長いパターン (|:n, |n) を単独 | より先に置く。",
+      "patterns": [
+        {
+          "name": "entity.name.tag.navigation.zmusic",
+          "match": "\\|:[0-9]*"
+        },
+        {
+          "name": "entity.name.tag.navigation.zmusic",
+          "match": ":\\|"
+        },
+        {
+          "name": "entity.name.tag.navigation.zmusic",
+          "match": "\\|[0-9]+"
+        },
+        {
+          "name": "entity.name.tag.navigation.zmusic",
+          "match": "\\|"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.zmusic",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.tie.zmusic",
+          "match": "&"
+        },
+        {
+          "name": "keyword.operator.additive-tie.zmusic",
+          "match": "\\^"
+        }
+      ]
+    }
+  }
+}

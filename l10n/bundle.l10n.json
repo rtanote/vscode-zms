@@ -1,0 +1,4 @@
+{
+  "//": "English default. All strings passed to vscode.l10n.t() in code default to their key value; this bundle is intentionally shipped empty because English == source strings. Kept as an anchor for the l10n contribution.",
+  "//_note": "ローカライズ元 (英語=デフォルト)。vscode.l10n.t() のキーがそのまま英語表示になるので本ファイルは空でよい。翻訳は bundle.l10n.<locale>.json 側で行う。"
+}

@@ -1,0 +1,6 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# .patch files must remain LF-only: git apply is sensitive to CRLF and can
+# fail silently on mixed line endings (bit us once in CI, so this is pinned).
+*.patch text eol=lf

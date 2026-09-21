@@ -1,0 +1,247 @@
+{
+  "name": "vscode-zms",
+  "displayName": "%displayName%",
+  "description": "%description%",
+  "version": "0.1.0",
+  "publisher": "rtanote",
+  "author": {
+    "name": "TAGAYA Ryo"
+  },
+  "license": "GPL-2.0-or-later",
+  "icon": "resources/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rtanote/vscode-zms.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rtanote/vscode-zms/issues"
+  },
+  "homepage": "https://github.com/rtanote/vscode-zms#readme",
+  "qna": "marketplace",
+  "preview": true,
+  "engines": {
+    "vscode": "^1.115.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Other"
+  ],
+  "keywords": [
+    "z-music",
+    "zmusic",
+    "mml",
+    "sharp x68000",
+    "x68000",
+    "retro",
+    "chiptune",
+    "fm synthesis",
+    "opm",
+    "ym2151"
+  ],
+  "galleryBanner": {
+    "color": "#0d1526",
+    "theme": "dark"
+  },
+  "main": "./out/src/extension.js",
+  "l10n": "./l10n",
+  "extensionKind": [
+    "workspace"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "zms",
+        "aliases": [
+          "Z-MUSIC",
+          "zmusic",
+          "zms"
+        ],
+        "extensions": [
+          ".zms"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "zms",
+        "scopeName": "source.zmusic",
+        "path": "./syntaxes/zms.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "zms",
+        "path": "./snippets/zms.code-snippets"
+      }
+    ],
+    "commands": [
+      { "command": "zmusic.play", "title": "%command.play.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.playFromCursor", "title": "%command.playFromCursor.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.stop", "title": "%command.stop.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.fadeOut", "title": "%command.fadeOut.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.toggleTrace", "title": "%command.toggleTrace.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.showPlayer", "title": "%command.showPlayer.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.dumpZmd", "title": "%command.dumpZmd.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.reportIssue", "title": "%command.reportIssue.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.selectDriver", "title": "%command.selectDriver.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.showSheetMusic", "title": "%command.showSheetMusic.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.selectVersion", "title": "%command.selectVersion.title%", "category": "Z-MUSIC" },
+      { "command": "zmusic.setupCopilotInstructions", "title": "%command.setupCopilotInstructions.title%", "category": "Z-MUSIC" }
+    ],
+    "keybindings": [
+      {
+        "command": "zmusic.play",
+        "key": "f5",
+        "when": "editorLangId == zms && !inDebugMode"
+      },
+      {
+        "command": "zmusic.playFromCursor",
+        "key": "shift+f5",
+        "when": "editorLangId == zms && !inDebugMode"
+      },
+      {
+        "command": "zmusic.stop",
+        "key": "f9",
+        "when": "editorLangId == zms"
+      },
+      {
+        "command": "zmusic.fadeOut",
+        "key": "shift+f9",
+        "when": "editorLangId == zms"
+      },
+      {
+        "command": "zmusic.toggleTrace",
+        "key": "ctrl+f5",
+        "mac": "cmd+f5",
+        "when": "editorLangId == zms"
+      }
+    ],
+    "viewsContainers": {
+      "panel": [
+        {
+          "id": "zmusicPanel",
+          "title": "%viewsContainer.zmusicPanel.title%",
+          "icon": "$(play)"
+        }
+      ]
+    },
+    "views": {
+      "zmusicPanel": [
+        {
+          "id": "zmusic.playerView",
+          "type": "webview",
+          "name": "%view.playerView.name%",
+          "icon": "$(play)",
+          "contextualTitle": "%view.playerView.contextualTitle%"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "zmusic.syntax.version": {
+          "type": "string",
+          "enum": ["auto", "2", "3"],
+          "default": "auto",
+          "markdownDescription": "%config.syntax.version.description%"
+        },
+        "zmusic.driver.path": {
+          "type": "string",
+          "default": "",
+          "description": "%config.driver.path.description%"
+        },
+        "zmusic.driver.downloadUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/toyoshim/z-music.js/master/x/ZMUSIC208.X",
+          "description": "%config.driver.downloadUrl.description%"
+        },
+        "zmusic.driver.version": {
+          "type": "string",
+          "enum": [
+            "2.08",
+            "1.10"
+          ],
+          "default": "2.08",
+          "description": "%config.driver.version.description%"
+        },
+        "zmusic.driverArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "-T100",
+            "-P400",
+            "-W100"
+          ],
+          "description": "%config.driverArgs.description%"
+        },
+        "zmusic.trace.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.trace.enabled.description%"
+        },
+        "zmusic.trace.lineHighlight": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.trace.lineHighlight.description%"
+        },
+        "zmusic.trace.followCursor": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.trace.followCursor.description%"
+        },
+        "zmusic.trace.ptrAdjust": {
+          "type": "number",
+          "default": 0,
+          "description": "%config.trace.ptrAdjust.description%"
+        },
+        "zmusic.trace.palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "rgba(255,170,0,0.45)",
+            "rgba(80,200,255,0.45)",
+            "rgba(150,255,120,0.45)",
+            "rgba(255,120,200,0.45)",
+            "rgba(200,160,255,0.45)",
+            "rgba(255,230,90,0.45)",
+            "rgba(120,255,230,0.45)",
+            "rgba(255,140,110,0.45)"
+          ],
+          "description": "%config.trace.palette.description%"
+        },
+        "zmusic.audio.bufferSize": {
+          "type": "number",
+          "default": 2048,
+          "minimum": 256,
+          "maximum": 8192,
+          "description": "%config.audio.bufferSize.description%"
+        },
+        "zmusic.player.revealOnPlay": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.player.revealOnPlay.description%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "tsc -p ./ && node --require ./test/setup.js --test out/test/unit/*.test.js",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.115.0",
+    "typescript": "^5.7.0"
+  },
+  "dependencies": {
+    "abcjs": "^6.6.2",
+    "iconv-lite": "^0.6.3"
+  }
+}

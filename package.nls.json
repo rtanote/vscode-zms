@@ -1,0 +1,37 @@
+{
+  "//": "Default (English) NLS bundle for package.json. Keys are referenced from package.json via %key% syntax. Non-user-facing fields (command IDs, contribution keys) intentionally not routed through here.",
+
+  "displayName": "Z-MUSIC v2 Player",
+  "description": "SHARP X68000 Z-MUSIC v2.08 MML (.zms) editor — syntax highlight, voice-def lint, WASM emulator playback (FM+ADPCM), per-track trace, mmdsp-style keyboard visualizer, abcjs sheet-music preview, Copilot integration",
+
+  "command.play.title": "Z-MUSIC: Compile & Play",
+  "command.playFromCursor.title": "Z-MUSIC: Play from Cursor",
+  "command.stop.title": "Z-MUSIC: Stop",
+  "command.fadeOut.title": "Z-MUSIC: Fade Out",
+  "command.toggleTrace.title": "Z-MUSIC: Toggle Trace",
+  "command.showPlayer.title": "Z-MUSIC: Show Player",
+  "command.dumpZmd.title": "Z-MUSIC: Dump Compiled ZMD (debug)",
+  "command.reportIssue.title": "Z-MUSIC: Report Issue",
+  "command.selectDriver.title": "Z-MUSIC: Select ZMUSIC.X",
+  "command.showSheetMusic.title": "Z-MUSIC: Show Sheet Music",
+  "command.selectVersion.title": "Z-MUSIC: Select Syntax Version (V2 / V3 / Auto)",
+  "command.setupCopilotInstructions.title": "Z-MUSIC: Setup Copilot Instructions for Z-MUSIC v2",
+
+  "viewsContainer.zmusicPanel.title": "Z-MUSIC Player",
+  "view.playerView.name": "Player",
+  "view.playerView.contextualTitle": "Z-MUSIC Player",
+
+  "config.title": "Z-MUSIC",
+  "config.syntax.version.description": "Z-MUSIC syntax version used for lint and hover. With `auto`, a magic comment (e.g. `/ zmusic-version: 2`) at the top of the file wins; otherwise a heuristic decides (currently defaults to v2). V3 mode disables range checking (not implemented).",
+  "config.driver.path.description": "Local file path for ZMUSIC.X. Takes priority over the globalStorage cache if set.",
+  "config.driver.downloadUrl.description": "URL to fetch ZMUSIC.X from. Used when the first-launch QuickPick offers a download.",
+  "config.driver.version.description": "Which ZMUSIC.X version to use. Only 2.08 is verified in v1 scope.",
+  "config.driverArgs.description": "Command-line options passed to ZMUSIC.X on launch.",
+  "config.trace.enabled.description": "Highlight the currently sounding note in the editor while playing.",
+  "config.trace.lineHighlight.description": "Also apply a faint background colour to the whole line while highlighting.",
+  "config.trace.followCursor.description": "Scroll the editor when the lowest-numbered playing track's position moves out of view.",
+  "config.trace.ptrAdjust.description": "p_data_pointer offset. Adjust by ±1 to a few bytes if playback appears one note ahead or behind (settled during the Phase 0 spike).",
+  "config.trace.palette.description": "Per-track highlight colours (8 cycled).",
+  "config.audio.bufferSize.description": "Web Audio buffer size (256..8192).",
+  "config.player.revealOnPlay.description": "Reveal the Player view automatically when playback starts."
+}

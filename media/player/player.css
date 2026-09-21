@@ -1,0 +1,160 @@
+/* VS Code のテーマ変数を優先し、ライト/ダークどちらでも自然に見えるようにする */
+body {
+  color: var(--vscode-foreground);
+  background: var(--vscode-editor-background);
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size, 13px);
+  margin: 0;
+  padding: 8px 12px;
+}
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid var(--vscode-panel-border, #444);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+#toolbar button {
+  background: var(--vscode-button-secondaryBackground, #333);
+  color: var(--vscode-button-secondaryForeground, #ddd);
+  border: 1px solid var(--vscode-button-border, transparent);
+  padding: 4px 10px;
+  cursor: pointer;
+  font: inherit;
+  border-radius: 3px;
+}
+
+#toolbar button:hover {
+  background: var(--vscode-button-secondaryHoverBackground, #444);
+}
+
+#toolbar button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#status {
+  margin-left: 8px;
+  opacity: 0.85;
+}
+
+#status.error {
+  color: var(--vscode-errorForeground, #f66);
+}
+
+#tracks {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+#tracks .track {
+  display: grid;
+  grid-template-columns: 20px 20px 3ch 3ch 5ch 5ch 5ch 8ch minmax(240px, 1fr) 7ch;
+  gap: 6px;
+  padding: 2px 0;
+  align-items: center;
+  /* トラックパレット色 (host から compile 直後に来る)。キーボード鍵盤の
+     アクティブキー塗りに使う。無指定なら暖色系にフォールバック */
+  --track-color: var(--vscode-charts-orange, #e88);
+}
+
+#tracks .track .pgm,
+#tracks .track .vol,
+#tracks .track .line {
+  color: var(--vscode-symbolIcon-variableForeground, var(--vscode-descriptionForeground, #999));
+  font-variant-numeric: tabular-nums;
+}
+
+#tracks .track .line {
+  color: var(--vscode-textLink-foreground, #6bf);
+}
+
+#tracks .track .vol {
+  color: var(--vscode-charts-yellow, #db3);
+}
+
+/* ── mmdsp テイストの鍵盤ビジュアライザ ─────────────────────
+   MIDI 全域 0..127 を固定縦横比 (preserveAspectRatio="xMidYMid meet")
+   で描画。ストロークは vector-effect: non-scaling-stroke で常に 0.6px。 */
+#tracks .track .keyboard {
+  width: 100%;
+  height: 32px;
+  display: block;
+  background: transparent;
+  border: 1px solid var(--vscode-panel-border, #333);
+  border-radius: 2px;
+}
+
+#tracks .track .keyboard .key {
+  transition: fill 60ms linear;
+  vector-effect: non-scaling-stroke;
+}
+
+#tracks .track .keyboard .key-white {
+  fill: var(--vscode-editor-background, #1e1e1e);
+  stroke: var(--vscode-descriptionForeground, #888);
+  stroke-width: 0.7px;
+}
+
+#tracks .track .keyboard .key-black {
+  fill: var(--vscode-editor-foreground, #ccc);
+  stroke: var(--vscode-editor-background, #1e1e1e);
+  stroke-width: 0.4px;
+}
+
+#tracks .track .keyboard .key.active {
+  fill: var(--track-color);
+  filter: drop-shadow(0 0 1.5px var(--track-color));
+}
+
+#tracks .track.muted .keyboard { opacity: 0.5; }
+
+#tracks .track.muted { opacity: 0.45; }
+
+#tracks .track .state-idle { color: var(--vscode-descriptionForeground, #888); }
+#tracks .track .state-playing { color: var(--vscode-charts-green, #6c6); }
+#tracks .track .state-ended { color: var(--vscode-descriptionForeground, #666); }
+#tracks .track .state-dead { color: var(--vscode-errorForeground, #f66); }
+
+#tracks .track button.btn-solo,
+#tracks .track button.btn-mute {
+  width: 20px;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 1;
+  background: var(--vscode-button-secondaryBackground, #333);
+  color: var(--vscode-descriptionForeground, #999);
+  border: 1px solid var(--vscode-button-border, transparent);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#tracks .track button.btn-solo:hover,
+#tracks .track button.btn-mute:hover {
+  background: var(--vscode-button-secondaryHoverBackground, #444);
+}
+
+#tracks .track button.btn-mute.active {
+  background: var(--vscode-inputValidation-errorBackground, #5a2626);
+  color: var(--vscode-inputValidation-errorForeground, #fff);
+  border-color: var(--vscode-inputValidation-errorBorder, #d66);
+}
+
+#tracks .track button.btn-solo.active {
+  background: var(--vscode-inputValidation-warningBackground, #5a4a1a);
+  color: var(--vscode-inputValidation-warningForeground, #fff);
+  border-color: var(--vscode-inputValidation-warningBorder, #db3);
+}
+
+#hint {
+  margin-top: 8px;
+  opacity: 0.6;
+  font-size: 11px;
+}

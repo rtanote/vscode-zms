@@ -1,0 +1,24 @@
+node_modules/
+out/
+*.vsix
+.env
+.claude/
+.DS_Store
+
+# Phase 0 スパイクの一時ファイル (fixtures はコミットする)
+spike/tmp/
+
+# ZMUSIC.X 実バイナリ (再配布不可、globalStorage 経由で取得)
+media/player/ZMUSIC208.X
+
+# Setup Copilot Instructions コマンドが test-fixtures/ で動作したときに生成される成果物
+test-fixtures/.github/
+test-fixtures/.vscode/
+
+# 個人テスト用サンドボックス (実 ZMS を配置。Copyright リスク回避のためコミット禁止)。
+# test-local/* を使って test-local/ 自体はコミット可 (ネストした否定パターンが効くように)
+test-local/*
+!test-local/.gitkeep
+
+# V3 マニュアル等の参考資料 (© Z.Nishikawa。再配布不可のため commit 禁止)
+docs-local/

@@ -1,0 +1,309 @@
+<!--
+  Marketplace 用ヒーロー画像の合成レイアウト。
+
+  使い方:
+    1. `editor-trace.png` / `player-panel.png` / `sheet-music.png` /
+       `copilot-setup.png` の 4 枚を同ディレクトリに配置
+    2. このファイルをブラウザで開く (double-click OK、URL は file://)
+    3. ブラウザで Cmd+P → PDF 保存 で PDF 化するか、開発者ツールの
+       スクリーンショット機能でウィンドウを PNG 保存
+       (Chrome: Cmd+Shift+P → "Capture full size screenshot")
+    4. 保存した画像を Marketplace の Publisher Portal で
+       ギャラリー画像として upload
+
+  推奨サイズ: 1280x720 (Marketplace の推奨ヒーロー)
+  背景色: X68000 由来の deep navy (#0d1526) — icon と統一
+
+  画像がまだ無い場合は placeholder が表示される。撮影後にファイルを
+  置き換えるだけで OK。
+-->
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>Z-MUSIC v2 Player — Marketplace hero</title>
+<style>
+  :root {
+    --bg: #0d1526;
+    --bg-panel: #1a2540;
+    --border: rgba(127, 166, 255, 0.25);
+    --accent: #7fa6ff;
+    --accent-key: #FF9900;
+    --caption: #b8c4dc;
+    --dim: #6b7899;
+    --track-1: #FFAA00;
+    --track-2: #50C8FF;
+    --track-3: #96FF78;
+    --track-4: #FF78C8;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: #e8ecf5;
+    font-family: -apple-system, "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+  }
+  .frame {
+    width: 1280px;
+    height: 720px;
+    padding: 28px 36px 24px;
+    margin: 0 auto;
+    background:
+      radial-gradient(circle at 15% 12%, rgba(127, 166, 255, 0.08), transparent 40%),
+      radial-gradient(circle at 88% 88%, rgba(255, 153, 0, 0.06), transparent 45%),
+      linear-gradient(180deg, #0f1930 0%, #0a1122 100%);
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    overflow: hidden;
+  }
+  header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    width: 64px;
+    height: 64px;
+    background: var(--bg-panel);
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+    font-weight: 900;
+    font-size: 34px;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo::before {
+    content: "";
+    position: absolute;
+    left: 6px; right: 6px; bottom: 6px;
+    height: 22px;
+    background: repeating-linear-gradient(90deg,
+      #f2f2f2 0 8px, #333 8px 9px);
+    border-radius: 2px;
+    box-shadow: inset 0 1px 0 #fff8;
+  }
+  .logo::after {
+    content: "";
+    position: absolute;
+    left: 6px; bottom: 6px;
+    width: 8px; height: 22px;
+    background: var(--accent-key);
+    border-radius: 2px;
+    box-shadow: 0 0 6px var(--accent-key);
+  }
+  h1 {
+    margin: 0;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    color: #e8ecf5;
+  }
+  h1 span {
+    color: var(--accent);
+    font-weight: 900;
+  }
+  .tagline {
+    color: var(--caption);
+    font-size: 14px;
+    margin-top: 4px;
+  }
+  .meta {
+    text-align: right;
+    color: var(--dim);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .meta b { color: var(--accent); font-weight: 700; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 14px;
+    min-height: 0;
+  }
+  .cell {
+    position: relative;
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+  .cell.hero {
+    grid-row: 1 / 3;
+  }
+  .cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    background: #12182a;
+  }
+  .cell .caption {
+    padding: 10px 14px;
+    background: linear-gradient(180deg, #16203a, #0f1730);
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge.editor { background: rgba(150, 255, 120, 0.18); color: #96FF78; }
+  .badge.player { background: rgba(255, 170, 0, 0.18); color: #FFAA00; }
+  .badge.sheet  { background: rgba(80, 200, 255, 0.18); color: #50C8FF; }
+  .badge.copilot { background: rgba(255, 120, 200, 0.18); color: #FF78C8; }
+  .cap-title { font-size: 13px; font-weight: 700; color: #e8ecf5; }
+  .cap-detail { font-size: 11px; color: var(--caption); }
+
+  /* Placeholder when image not yet loaded */
+  .placeholder {
+    display: grid;
+    place-items: center;
+    color: var(--dim);
+    font-size: 12px;
+    text-align: center;
+    padding: 24px;
+    background:
+      repeating-linear-gradient(45deg,
+        rgba(127, 166, 255, 0.03) 0 12px,
+        rgba(127, 166, 255, 0.06) 12px 24px);
+    height: 100%;
+  }
+  .placeholder code {
+    color: var(--accent);
+    font-family: "SF Mono", Menlo, monospace;
+  }
+
+  /* Feature strip on the very bottom of the hero cell */
+  .cell.hero .feature-strip {
+    position: absolute;
+    left: 0; right: 0; bottom: 50px; /* stays above caption */
+    padding: 8px 16px;
+    background: linear-gradient(180deg, rgba(13, 21, 38, 0), rgba(13, 21, 38, 0.9));
+    display: flex;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--caption);
+    pointer-events: none;
+  }
+  .feature-chip {
+    background: rgba(127, 166, 255, 0.12);
+    border: 1px solid rgba(127, 166, 255, 0.3);
+    border-radius: 12px;
+    padding: 3px 10px;
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <header>
+      <div class="logo">Z</div>
+      <div>
+        <h1><span>Z-MUSIC v2</span> Player <span style="font-weight:500">for VS Code</span></h1>
+        <div class="tagline">
+          Sharp X68000 の MML (.zms) を編集・その場で再生・演奏位置をエディタで追従。
+          mmdsp テイストのトラック別鍵盤ビジュアライザ搭載。
+        </div>
+      </div>
+      <div class="meta">
+        <b>WASM playback</b><br>
+        FM (OPM 8ch) + ADPCM<br>
+        Windows / macOS
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Hero: エディタ + トレース -->
+      <div class="cell hero">
+        <picture>
+          <img src="editor-trace.png" alt="Editor with syntax highlight + trace"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <div class="placeholder" style="display:none">
+            <div>
+              <div style="font-size:24px;margin-bottom:8px">📝</div>
+              <b>editor-trace.png</b> 未配置<br>
+              <code>docs/screenshots/editor-trace.png</code> を撮影して配置
+            </div>
+          </div>
+        </picture>
+        <div class="feature-strip">
+          <span class="feature-chip">Syntax highlight</span>
+          <span class="feature-chip">Per-track color</span>
+          <span class="feature-chip">Live trace</span>
+          <span class="feature-chip">Voice-def lint</span>
+        </div>
+        <div class="caption">
+          <span class="badge editor">Editor</span>
+          <div>
+            <div class="cap-title">シンタックス + 発音位置トレース</div>
+            <div class="cap-detail">音符=白 / 休符=赤 / パンポット=黄 / フロー制御=緑 / オクターブ=青。再生中の音符がトラック色でハイライト</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Player panel -->
+      <div class="cell">
+        <picture>
+          <img src="player-panel.png" alt="Z-MUSIC Player panel"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <div class="placeholder" style="display:none">
+            <div>
+              <div style="font-size:24px;margin-bottom:8px">🎹</div>
+              <b>player-panel.png</b> 未配置<br>
+              <code>docs/screenshots/player-panel.png</code>
+            </div>
+          </div>
+        </picture>
+        <div class="caption">
+          <span class="badge player">Player</span>
+          <div>
+            <div class="cap-title">mmdsp 風 鍵盤ビジュアライザ</div>
+            <div class="cap-detail">Solo / Mute · @n · vNN · Lnn · 全トラック並列表示</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sheet music -->
+      <div class="cell">
+        <picture>
+          <img src="sheet-music.png" alt="abcjs sheet-music preview"
+               onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
+          <div class="placeholder" style="display:none">
+            <div>
+              <div style="font-size:24px;margin-bottom:8px">🎼</div>
+              <b>sheet-music.png</b> 未配置<br>
+              <code>docs/screenshots/sheet-music.png</code>
+            </div>
+          </div>
+        </picture>
+        <div class="caption">
+          <span class="badge sheet">Sheet</span>
+          <div>
+            <div class="cap-title">abcjs 譜面プレビュー</div>
+            <div class="cap-detail">MML → 譜面表示、現在ノートを色付き追従</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

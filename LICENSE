@@ -1,0 +1,34 @@
+Z-MUSIC v2 Player VS Code extension
+Copyright (C) 2026 TAGAYA Ryo
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, see <https://www.gnu.org/licenses/> or the
+bundled copy at docs/GPL-2.txt.
+
+────────────────────────────────────────────────────────────────
+Rationale (short)
+
+  The extension bundles a WASM build (media/player/zmusic.wasm) that
+  statically links run68, a 68000 emulator licensed under GPL v2.  The
+  combined VSIX is therefore a derivative work of run68 and must be
+  distributed under GPL v2 (or a later version) as a whole.
+
+  Individual source files authored for this extension (everything under
+  src/, media/player/*.{html,css,js}, syntaxes/, scripts/, test/) are
+  original works by TAGAYA Ryo.  They are contributed under GPL-2.0-or
+  -later so the combined distribution's license is unambiguous.
+
+  Third-party components (abcjs, iconv-lite, z-music.js, X68Sound,
+  run68/run68as) each retain their own upstream licenses.  See
+  THIRD_PARTY_NOTICES.md for the full breakdown.
+────────────────────────────────────────────────────────────────
