@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1]
+
+### Fixed
+
+- **Critical**: All commands failed with "command 'zmusic.xxx' not found"
+  on freshly installed extension because the `iconv-lite` runtime dependency
+  was not bundled in the VSIX. The extension's `activate()` threw during
+  the SJIS conversion module load, aborting all command registration.
+  0.1.1 rebuilds the VSIX with production dependencies included.
+
 ## [0.1.0]
 
 Initial public release.

@@ -25,7 +25,12 @@ third_party/**
 **/*.ts
 **/*.map
 tsconfig.json
-node_modules/**
+# node_modules は敢えて .vscodeignore に書かない。
+# **絶対に `vsce publish --no-dependencies` を付けない** (v0.1.0 で誤って
+# 付けて iconv-lite が VSIX から欠落、activate() が require で落ちて全コマンド
+# 未登録になった)。無フラグでの `vsce publish` は npm ls prod の結果で prod deps
+# を自動同梱する。逆に `node_modules/**` を .vscodeignore に書くと、
+# フラグ有無に関わらず全 dep が VSIX から除外されてしまう。
 *.vsix
 
 # アイコンのソース (SVG) は同梱不要。PNG のみ
