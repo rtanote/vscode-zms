@@ -6,6 +6,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2]
+
+### Fixed
+
+- A short burst of the previously played tune was heard at the start of
+  every playback after the first. The WASM engine renders one audio
+  buffer ahead of the output, and stopping playback left that
+  already-rendered chunk (~46 ms) flagged as ready, so the next
+  playback emitted it before its own first note. The look-ahead buffer
+  is now discarded when playback starts.
+- A faint click remained at the start of the second and later playbacks.
+  Playback resumes the emulator from whatever internal state the previous
+  tune left behind, so its first sample is rarely near zero and the jump
+  to it from silence is a step discontinuity. Playback now ramps in over
+  4 ms, and stopping ramps out over the same span instead of cutting the
+  waveform dead.
+
 ## [0.1.1]
 
 ### Fixed

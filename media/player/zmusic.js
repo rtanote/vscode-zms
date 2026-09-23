@@ -229,6 +229,41 @@ var zmusicPrerender = function () {
   zmusicPrerenderBufferReady = true;
 };
 
+// Sample-domain de-click ramps.
+//
+// Restarting playback resumes the emulator from whatever internal state the
+// previous tune left behind, so the first sample of the new playback is rarely
+// anywhere near zero. Jumping to it from silence in a single sample is a step
+// discontinuity -- heard as a click. The same happens in reverse when playback
+// is cut mid-waveform. Short ramps at both ends remove both.
+//
+// The ramp has to be applied to the samples here rather than through a
+// GainNode: the ScriptProcessor hands its buffer to the graph about one buffer
+// ahead of when it is heard, so automation scheduled on the AudioContext clock
+// at start()/stop() time would land at an unpredictable offset relative to the
+// first/last sample of the tune.
+var zmusicFadeSamples = 0;        // ramp length in frames (set in zmusicReady)
+var zmusicFadeInTotal = 0;
+var zmusicFadeInRemaining = 0;
+var zmusicFadeOutSamples = 0;
+
+// Emits the already-rendered next chunk as a descending ramp, then silence, so
+// a stop walks the output down to zero instead of cutting it dead. The chunk is
+// contiguous with the one just played (zmusicPrerender always renders the next
+// buffer), which is what makes it usable as a release tail.
+var zmusicEmitFadeOut = function (outputBuffer) {
+  var sl = zmusicPrerenderBuffer[0];
+  var sr = zmusicPrerenderBuffer[1];
+  var dl = outputBuffer.getChannelData(0);
+  var dr = outputBuffer.getChannelData(1);
+  var n = zmusicFadeOutSamples;
+  for (var i = 0; i < audioBufferSize; ++i) {
+    var g = i < n ? (n - i) / n : 0;
+    dl[i] = sl[i] * g;
+    dr[i] = sr[i] * g;
+  }
+};
+
 var zmusicReady = function (code) {
   if (code != 0) {
     zmusicResolver.reject(code);
@@ -237,11 +272,21 @@ var zmusicReady = function (code) {
   if (!audioContext)
     audioContext = new (window.AudioContext || webkitAudioContext);
   zmusicBuffer = Module._zmusic_init(audioContext.sampleRate, audioBufferSize);
+  // 4 ms: long enough to push the step transient below audibility, short
+  // enough that the attack of the first note is still perceived as instant.
+  zmusicFadeSamples = Math.min(
+      audioBufferSize, Math.round(audioContext.sampleRate * 0.004));
   scriptProcessor = audioContext.createScriptProcessor(audioBufferSize, 2, 2);
   scriptProcessor.connect(audioContext.destination);
   scriptProcessor.addEventListener('audioprocess', function (e) {
-    if (!zmusicPlaying)
+    if (!zmusicPlaying) {
+      if (zmusicFadeOutSamples > 0) {
+        zmusicEmitFadeOut(e.outputBuffer);
+        zmusicFadeOutSamples = 0;
+        zmusicPrerenderBufferReady = false;
+      }
       return;
+    }
     if (!zmusicPrerenderBufferReady)
       zmusicPrerender();
 
@@ -250,8 +295,13 @@ var zmusicReady = function (code) {
     var dl = e.outputBuffer.getChannelData(0);
     var dr = e.outputBuffer.getChannelData(1);
     for (var i = 0; i < audioBufferSize; ++i) {
-      dl[i] = sl[i];
-      dr[i] = sr[i];
+      var g = 1;
+      if (zmusicFadeInRemaining > 0) {
+        g = (zmusicFadeInTotal - zmusicFadeInRemaining) / zmusicFadeInTotal;
+        --zmusicFadeInRemaining;
+      }
+      dl[i] = sl[i] * g;
+      dr[i] = sr[i] * g;
     }
 
     zmusicPrerenderBufferReady = false;
@@ -434,6 +484,9 @@ ZMUSIC = {
 
     ZMUSIC.trap(0x0a, 0, 0, 0, 0, null);
     zmusicPlaying = false;
+    // Only possible when a next chunk was already rendered; without one there
+    // is nothing to ramp down and the abrupt cut is unavoidable (and rare).
+    zmusicFadeOutSamples = zmusicPrerenderBufferReady ? zmusicFadeSamples : 0;
   },
 
   /**
@@ -468,6 +521,20 @@ ZMUSIC = {
    * compile() resolves.
    */
   start: function () {
+    // Drop the look-ahead buffer before keying the driver on.
+    //
+    // The audioprocess handler renders one buffer ahead, so when playback is
+    // stopped there is almost always a fully rendered chunk of the PREVIOUS
+    // tune still flagged ready. stop() only clears |zmusicPlaying| and leaves
+    // that chunk alone, so the first audioprocess of the next playback emits
+    // it verbatim -- ~46 ms (2048 frames @44.1 kHz) of the old song heard as a
+    // burst of noise ahead of the new one. Clearing the flag here puts us in
+    // the same state as the very first playback, which is why that one is
+    // clean.
+    zmusicPrerenderBufferReady = false;
+    zmusicFadeInTotal = zmusicFadeSamples;
+    zmusicFadeInRemaining = zmusicFadeSamples;
+    zmusicFadeOutSamples = 0;
     ZMUSIC.state = ZMUSIC.PLAYING;
     ZMUSIC.trap(0x08, 0, 0, 0, 0, null);
     zmusicPlaying = true;

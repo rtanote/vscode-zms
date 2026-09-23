@@ -2,7 +2,7 @@
   "name": "vscode-zms",
   "displayName": "%displayName%",
   "description": "%description%",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "rtanote",
   "author": {
     "name": "TAGAYA Ryo"
