@@ -2,7 +2,7 @@
   "name": "vscode-zms",
   "displayName": "%displayName%",
   "description": "%description%",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publisher": "rtanote",
   "author": {
     "name": "TAGAYA Ryo"
@@ -76,18 +76,66 @@
       }
     ],
     "commands": [
-      { "command": "zmusic.play", "title": "%command.play.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.playFromCursor", "title": "%command.playFromCursor.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.stop", "title": "%command.stop.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.fadeOut", "title": "%command.fadeOut.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.toggleTrace", "title": "%command.toggleTrace.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.showPlayer", "title": "%command.showPlayer.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.dumpZmd", "title": "%command.dumpZmd.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.reportIssue", "title": "%command.reportIssue.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.selectDriver", "title": "%command.selectDriver.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.showSheetMusic", "title": "%command.showSheetMusic.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.selectVersion", "title": "%command.selectVersion.title%", "category": "Z-MUSIC" },
-      { "command": "zmusic.setupCopilotInstructions", "title": "%command.setupCopilotInstructions.title%", "category": "Z-MUSIC" }
+      {
+        "command": "zmusic.play",
+        "title": "%command.play.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.playFromCursor",
+        "title": "%command.playFromCursor.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.stop",
+        "title": "%command.stop.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.fadeOut",
+        "title": "%command.fadeOut.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.toggleTrace",
+        "title": "%command.toggleTrace.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.showPlayer",
+        "title": "%command.showPlayer.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.dumpZmd",
+        "title": "%command.dumpZmd.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.reportIssue",
+        "title": "%command.reportIssue.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.selectDriver",
+        "title": "%command.selectDriver.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.showSheetMusic",
+        "title": "%command.showSheetMusic.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.selectVersion",
+        "title": "%command.selectVersion.title%",
+        "category": "Z-MUSIC"
+      },
+      {
+        "command": "zmusic.setupCopilotInstructions",
+        "title": "%command.setupCopilotInstructions.title%",
+        "category": "Z-MUSIC"
+      }
     ],
     "keybindings": [
       {
@@ -142,7 +190,11 @@
       "properties": {
         "zmusic.syntax.version": {
           "type": "string",
-          "enum": ["auto", "2", "3"],
+          "enum": [
+            "auto",
+            "2",
+            "3"
+          ],
           "default": "auto",
           "markdownDescription": "%config.syntax.version.description%"
         },
@@ -236,12 +288,12 @@
     "vscode:prepublish": "npm run compile"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
+    "@types/node": "^26.6.3",
     "@types/vscode": "^1.115.0",
-    "abcjs": "^6.6.2",
-    "typescript": "^5.7.0"
+    "abcjs": "^6.7.1",
+    "typescript": "^7.0.2"
   },
   "dependencies": {
-    "iconv-lite": "^0.6.3"
+    "iconv-lite": "^0.7.3"
   }
 }

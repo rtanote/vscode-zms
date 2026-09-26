@@ -49,9 +49,12 @@ See [LICENSE](LICENSE) for the exact terms.
 
 ### abcjs
 
-Copyright © 2015-2024 Paul Rosen and Gregory Dyke
+Copyright © 2009-2026 Paul Rosen and Gregory Dyke
 
-MIT License. Bundled as `media/abcjs-basic-min.js`.
+MIT License. Bundled as `media/abcjs-basic-min.js` (v6.7.1), a verbatim
+copy of the package's `dist/abcjs-basic-min.js`. The npm entry is a dev
+dependency only, since `vsce` bundles production dependencies alone and a
+webview can load only files inside the extension.
 Upstream: <https://github.com/paulrosen/abcjs>
 
 ### iconv-lite

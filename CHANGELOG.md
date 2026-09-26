@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3]
+
+Maintenance release — no change to what the extension does.
+
+### Changed
+
+- Sheet-music renderer (abcjs) updated 6.6.2 → 6.7.1. The bundled copy of
+  the renderer had been left behind at the version the project started
+  with while the manifest moved on, so the two are now back in step.
+  Upstream lists only bug fixes across the intervening releases;
+  rendering and the playback highlight were checked by hand.
+- SJIS conversion library (iconv-lite) updated 0.6.3 → 0.7.3.
+- Build-time dependencies updated (TypeScript 7.0.2, `@types/node` 26).
+
+### Internal
+
+- Added tests for the SJIS conversion path, which had none: known byte
+  sequences for kana and kanji, CRLF normalisation, and the invariant
+  that ASCII MML stays one byte per character (the ZMD step arithmetic is
+  byte-indexed).
+- Added a check that the bundled renderer stays identical to the
+  installed package, so the two cannot drift apart again unnoticed.
+- Added a CI workflow that runs the tests and packages the extension on
+  every pull request, and enabled automated dependency updates.
+
 ## [0.1.2]
 
 ### Fixed

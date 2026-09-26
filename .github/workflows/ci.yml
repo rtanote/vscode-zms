@@ -1,0 +1,42 @@
+# PR 検証。Dependabot の依存更新をマージしてよいかをここで判定する。
+#
+# これが無いと Dependabot の PR はチェック 0 件のまま緑に見え、
+# 壊れた更新が素通りする。実際に踏みうる 2 つはどちらもここで落ちる:
+#   - iconv-lite が VSIX に同梱されない → 全コマンド未登録 (0.1.1 の事故)
+#   - @types/vscode の単独更新 → engines.vscode と不整合で package 失敗
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # third_party/z-music.js は WASM 再ビルド時のみ必要で、
+          # compile / test / package には不要なので取得しない。
+          submodules: false
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '20'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Unit tests
+        run: npm test
+
+      # 依存更新が配布物を壊していないかまで見る。--no-dependencies は
+      # 付けないこと (production 依存が欠落した VSIX ができる)。
+      - name: Package VSIX
+        run: npx @vscode/vsce package -o /tmp/probe.vsix
+
+      - name: Verify runtime deps are bundled
+        run: |
+          unzip -l /tmp/probe.vsix | grep -q 'node_modules/iconv-lite' \
+            || { echo "::error::iconv-lite が VSIX に含まれていない (拡張が activate に失敗する)"; exit 1; }
